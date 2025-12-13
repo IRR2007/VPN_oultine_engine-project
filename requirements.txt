@@ -1,0 +1,2 @@
+outline-vpn-api
+python-decouple
