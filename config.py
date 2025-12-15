@@ -1,11 +1,19 @@
 from outline_vpn.outline_vpn import OutlineVPN
 from decouple import config
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 import logging
+import os
 
 # for outline-api
 api_url = config("API_URL")
 cert_sha256 = config("CERT_SHA")
-client = OutlineVPN(api_url = api_url, cert_sha256 = cert_sha256)
+
+DB_NAME: str = config("DB_NAME")
+DB_DIR: str = config("DB_DIR")
+
+
+def DATABASE_URL() -> str:
+	return f"sqlite+aiosqlite:///{os.path.join(DB_DIR, DB_NAME)}"
 
 # for logging
 def set_logger():
@@ -18,5 +26,11 @@ def set_logger():
 		]
 	)
 	return logging.getLogger(__name__)
+
+
+client = OutlineVPN(api_url = api_url, cert_sha256 = cert_sha256)
+
+engine = create_async_engine(DATABASE_URL(), echo=True)
+session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 logger = set_logger()
