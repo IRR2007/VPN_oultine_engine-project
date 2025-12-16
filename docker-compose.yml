@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postgres_bot_db
+      POSTGRES_USER: host
+      POSTGRES_PASSWORD: 12345
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  bot:
+    build: .
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
