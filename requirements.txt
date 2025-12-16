@@ -1,5 +1,5 @@
 outline-vpn-api
 python-decouple
 sqlalchemy
-aiosqlite
+asyncpg
 asyncio
