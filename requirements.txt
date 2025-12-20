@@ -1,2 +1,4 @@
 outline-vpn-api
 python-decouple
+python-dotenv
+aiogram
