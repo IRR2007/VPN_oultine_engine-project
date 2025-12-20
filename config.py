@@ -36,10 +36,7 @@ def set_logger():
 
 client = OutlineVPN(api_url = api_url, cert_sha256 = cert_sha256)
 
-engine = create_async_engine(
-    database_url(),
-    echo=True,
-)
+engine = create_async_engine(database_url())
 session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 logger = set_logger()
