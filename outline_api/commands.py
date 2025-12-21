@@ -9,7 +9,7 @@ class OutlineCommands():
 	def __init__(self, client) -> None:
 		self.client = client
 
-	async def generate_new_key(self, username):
+	async def generate_new_key(self, username) -> Any:
 		try:
 			key = await asyncio.to_thread(self.client.create_key)
 			await asyncio.to_thread(self.client.rename_key, key.key_id, username)
