@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
 from aiogram import F
 from telegram_bot.keyboards.main_menu import main_menu_keyboard
-from  telegram_bot.keyboards.tariffs import tariffs_keyboard, confirm_tariff_keyboard
+from telegram_bot.keyboards.tariffs import tariffs_keyboard, confirm_tariff_keyboard
 from telegram_bot.handlers.start import router as start_router
 from telegram_bot.handlers.tariffs import router as tariffs_router
 from telegram_bot.handlers.profile import router as profile_router
@@ -12,8 +12,7 @@ from telegram_bot.handlers.support import router as support_router
 
 from config import BOT_TOKEN
 
-from database.db import db
-
+from config import db
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()

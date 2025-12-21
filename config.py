@@ -8,9 +8,9 @@ from dotenv import load_dotenv
 #for tg-bot
 load_dotenv()
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = config("BOT_TOKEN")
 
-PAYMENT_PROVIDER_TOKEN = os.getenv("PAYMENT_PROVIDER_TOKEN")
+PAYMENT_PROVIDER_TOKEN = config("PAYMENT_PROVIDER_TOKEN")
 
 if not BOT_TOKEN:
     raise ValueError("BOT_TOKEN не найден в .env файле!")
@@ -54,5 +54,6 @@ client = OutlineVPN(api_url = api_url, cert_sha256 = cert_sha256)
 
 engine = create_async_engine(database_url())
 session_maker = async_sessionmaker(engine, expire_on_commit=False)
+db = DataBaseHandler(session_maker, engine)
 
 logger = set_logger()

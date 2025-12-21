@@ -3,7 +3,7 @@ from telegram_bot.keyboards.tariffs import tariffs_keyboard, confirm_tariff_keyb
 from config import PAYMENT_PROVIDER_TOKEN, client, logging
 from outline_api.commands import OutlineCommands
 
-from database.db import db
+from config import db
 
 from datetime import datetime, timedelta, timezone
 
