@@ -38,3 +38,10 @@ class OutlineCommands():
 			return keys
 		except Exception as e:
 			logging.info(f"Error while getting information: {e}")
+
+	async def stop_expired_key(self, key_id) -> None:
+		try:
+			self.client.add_data_limit(key_id, 0)
+			logging.info(f"Key {key_id} expired and data limit is equal to 0")
+		except Exception as e:
+			logging.info(f"Error while stopping expired key")

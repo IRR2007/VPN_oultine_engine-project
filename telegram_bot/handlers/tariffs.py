@@ -1,13 +1,14 @@
 from aiogram import Router, F, types
 from telegram_bot.keyboards.tariffs import tariffs_keyboard, confirm_tariff_keyboard
-from config import PAYMENT_PROVIDER_TOKEN
-from telegram_bot.services.outline import outline
+from config import PAYMENT_PROVIDER_TOKEN, client, logging
+from outline_api.commands import OutlineCommands
 
 from database.db import db
 
 from datetime import datetime, timedelta, timezone
 
 router = Router()
+outline = OutlineCommands(client)
 
 PRICES = {7: 99, 14: 179, 30: 299}
 
