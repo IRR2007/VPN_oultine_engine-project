@@ -87,8 +87,8 @@ class DataBaseHandler:
                 query = select(Key.expiration_date).where(Key.access_url == key_str)
                 result = await session.execute(query)
                 return result.scalar()
-        except Exception:
-            logging.info(f"Failed to get expiration date of key {key_str} database")
+        except Exception as e:
+            logging.info(f"Failed to get expiration date of key {key_str} database. Details:\n{e}")
 
     async def valid_check_key(self, key_str: str) -> Optional[bool]:
         """Проверяет истек ли "срок годности" ключа ✅"""
@@ -115,13 +115,13 @@ class DataBaseHandler:
         except Exception:
             logging.info(f"Failed to update expiration date of key {key_str} database")
 
-    async def get_all_valid_key(self) -> Optional[List[str]]:
+    async def get_all_invalid_keys_id(self) -> Optional[List[str]]:
         try:
             result = []
             all_keys = await self.get_all_keys()
             for key in all_keys:
-                if not await self.valid_check_key(key):
-                    result.append(key)
+                if not await self.valid_check_key(key.access_url):
+                    result.append(key.outline_id)
             return result
         except Exception:
             logging.info(f"Failed to get all invalid keys from database")
