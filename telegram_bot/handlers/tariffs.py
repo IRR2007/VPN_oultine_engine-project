@@ -126,7 +126,8 @@ async def successful_payment_handler(message: types.Message):
         await db.add_key(
             key_str=key.access_url,
             user_name=str(user_id),
-            expiration=expiration
+            expiration=expiration,
+            key_id=key.key_id
         )
 
         await message.answer(
