@@ -1,7 +1,7 @@
 from aiogram import Router, F, types
 from datetime import datetime, timezone
 
-from telegram_bot.database.db import db
+from database.db import db
 from telegram_bot.keyboards.profile import profile_keyboard
 
 router = Router()

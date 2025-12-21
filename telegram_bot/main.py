@@ -27,9 +27,9 @@ from telegram_bot.handlers.tariffs import router as tariffs_router
 from telegram_bot.handlers.profile import router as profile_router
 from telegram_bot.handlers.support import router as support_router
 
-from telegram_bot.config import BOT_TOKEN
+from config import BOT_TOKEN
 
-from telegram_bot.database.db import db
+from database.db import db
 
 
 bot = Bot(token=BOT_TOKEN)

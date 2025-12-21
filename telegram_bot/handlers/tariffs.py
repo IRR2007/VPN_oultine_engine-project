@@ -1,9 +1,9 @@
 from aiogram import Router, F, types
 from telegram_bot.keyboards.tariffs import tariffs_keyboard, confirm_tariff_keyboard
-from telegram_bot.config import PAYMENT_PROVIDER_TOKEN
+from config import PAYMENT_PROVIDER_TOKEN
 from telegram_bot.services.outline import outline
 
-from telegram_bot.database.db import db
+from database.db import db
 
 from datetime import datetime, timedelta, timezone
 
