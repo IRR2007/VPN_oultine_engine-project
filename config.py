@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 import logging
 import os
 from dotenv import load_dotenv
-
+from database.handlerDB import DataBaseHandler
 #for tg-bot
 load_dotenv()
 
