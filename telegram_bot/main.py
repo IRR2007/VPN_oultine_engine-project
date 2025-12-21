@@ -29,6 +29,8 @@ from telegram_bot.handlers.support import router as support_router
 
 from telegram_bot.config import BOT_TOKEN
 
+from telegram_bot.database.db import db
+
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -40,6 +42,7 @@ dp.include_router(support_router)
 
 
 async def main():
+    await db.create_db()
     await dp.start_polling(bot)
 
 
