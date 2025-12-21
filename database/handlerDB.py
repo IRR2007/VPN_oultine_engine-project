@@ -1,8 +1,8 @@
 from database.models import Key, Base
 from config import logging
-import datetime
+from datetime import date
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
-from sqlalchemy import select, update, delete
+from sqlalchemy import select, update
 from typing import List, Optional
 
 
@@ -16,7 +16,7 @@ class DataBaseHandler:
         try:
             async with self.engine.begin() as conn:
                 await conn.run_sync(Base.metadata.create_all)
-        except Exception as e:
+        except Exception:
             logging.info("Failed to create database")
 
     async def drop_db(self) -> None:
@@ -24,18 +24,18 @@ class DataBaseHandler:
         try:
             async with self.engine.begin() as conn:
                 await conn.run_sync(Base.metadata.drop_all)
-        except Exception as e:
+        except Exception:
             logging.info("Failed to drop database")
 
-    async def add_key(self, key_str: str, user_name: str, expiration: datetime.datetime) -> None:
+    async def add_key(self, key_str: str, user_name: str, expiration: date, key_id : int) -> None:
         """Добавляет ключ ОБРАТИТЕ ВНИМАНИЕ ЧТО ТРЕБУЕТСЯ UTC!!!"""
         try:
             async with self.session_maker() as session:
-                new_key: Key = Key(access_url=key_str, user=user_name, expiration_date=expiration)
+                new_key: Key = Key(access_url=key_str, user=user_name, expiration_date=expiration, outline_id=key_id)
                 session.add(new_key)
                 await session.commit()
         except Exception as e:
-            logging.info(f"Failed to add key {key_str} to database")
+            logging.info(f"Failed to add key {key_str} to database. Details:\n{e}")
 
     async def delete_key(self, key_str: str) -> None:
         """Удаляет ключ ✅"""
@@ -46,7 +46,7 @@ class DataBaseHandler:
                 if key_obj:
                     await session.delete(key_obj)
                     await session.commit()
-        except Exception as e:
+        except Exception:
             logging.info(f"Failed to delete key {key_str} from database")
 
     async def get_all_keys(self):
@@ -56,7 +56,7 @@ class DataBaseHandler:
                 query = select(Key)
                 result = await session.execute(query)
                 return result.scalars().all()
-        except Exception as e:
+        except Exception:
             logging.info("Failed to get all keys from database")
 
     async def get_key_user(self, key_str: str) -> Optional[str]:
@@ -66,7 +66,7 @@ class DataBaseHandler:
                 query = select(Key.user).where(Key.access_url == key_str)
                 result = await session.execute(query)
                 return result.scalar()
-        except Exception as e:
+        except Exception:
             logging.info(f"Failed to get user_name connected to key {key_str} from database")
 
     async def get_all_user_keys(self, user_name: str) -> Optional[List[str]]:
@@ -77,17 +77,17 @@ class DataBaseHandler:
                 query = select(Key.access_url).where(Key.user == user_name)
                 result = await session.execute(query)
                 return result.scalars().all()
-        except Exception as e:
+        except Exception:
             logging.info(f"Failed to get all keys connected to user {user_name} database")
 
-    async def get_key_expiration_date(self, key_str: str) -> Optional[datetime.datetime]:
+    async def get_key_expiration_date(self, key_str: str) -> Optional[date]:
         """Возвращает "срок годности" ключа по самому ключу ✅"""
         try:
             async with self.session_maker() as session:
                 query = select(Key.expiration_date).where(Key.access_url == key_str)
                 result = await session.execute(query)
                 return result.scalar()
-        except Exception as e:
+        except Exception:
             logging.info(f"Failed to get expiration date of key {key_str} database")
 
     async def valid_check_key(self, key_str: str) -> Optional[bool]:
@@ -96,11 +96,11 @@ class DataBaseHandler:
             expiration = await self.get_key_expiration_date(key_str)
             if expiration is None:
                 return None
-            return  datetime.datetime.now(datetime.timezone.utc) <= expiration
-        except Exception as e:
+            return date.today() <= expiration
+        except Exception:
             logging.info(f"Failed to check validity of key {key_str} database")
 
-    async def update_key_expiration_date(self, key_str: str, new_expiration: datetime.datetime) -> Optional[bool]:
+    async def update_key_expiration_date(self, key_str: str, new_expiration: date) -> Optional[bool]:
         """Обновляет срок годности ключа ✅"""
         try:
             async with self.session_maker() as session:
@@ -112,5 +112,25 @@ class DataBaseHandler:
                 result = await session.execute(query)
                 await session.commit()
                 return result.rowcount > 0
-        except Exception as e:
+        except Exception:
             logging.info(f"Failed to update expiration date of key {key_str} database")
+
+    async def get_all_valid_key(self) -> Optional[List[str]]:
+        try:
+            result = []
+            all_keys = await self.get_all_keys()
+            for key in all_keys:
+                if not await self.valid_check_key(key):
+                    result.append(key)
+            return result
+        except Exception:
+            logging.info(f"Failed to get all invalid keys from database")
+
+    async def get_key_id(self, key_str: str) -> Optional[int]:
+        try:
+            async with self.session_maker() as session:
+                query = select(Key.outline_id).where(Key.access_url == key_str)
+                result = await session.execute(query)
+                return result
+        except Exception:
+            logging.info(f"Failed to get outline id of key from database")
