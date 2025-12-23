@@ -122,12 +122,12 @@ graph TD
 ```mermaid
 erDiagram
     key {
-        INTEGER id PK
-        STRING outline_id NOT_NULL
-        STRING access_url NOT_NULL
-        STRING user NOT_NULL
-        DATE creation_date NOT_NULL
-        DATE expiration_date NOT_NULL
+        INTEGER id PK "NOT NULL"
+        STRING outline_id "NOT NULL"
+        STRING access_url "NOT NULL"
+        STRING user "NOT NULL"
+        DATE creation_date "NOT NULL, DEFAULT now()"
+        DATE expiration_date "NOT NULL"
     }
 
     %% Индексы
