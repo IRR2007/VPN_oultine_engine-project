@@ -13,6 +13,7 @@ class OutlineCommands():
 		try:
 			key = await asyncio.to_thread(self.client.create_key)
 			await asyncio.to_thread(self.client.rename_key, key.key_id, username)
+			await asyncio.to_thread(self.client.add_data_limit, key.key_id, 3 * 10**12)
 			return key
 		except Exception as e:
 			logging.info(f"Error while generating: {e}")
@@ -41,7 +42,15 @@ class OutlineCommands():
 
 	async def stop_expired_key(self, key_id) -> None:
 		try:
-			self.client.add_data_limit(key_id, 0)
+			await asyncio.to_thread(self.client.add_data_limit, key_id, 0)
 			logging.info(f"Key {key_id} expired and data limit is equal to 0")
 		except Exception as e:
-			logging.info(f"Error while stopping expired key")
+			logging.info(f"Error while stopping expired key {key_id}: {e}")
+
+	async def start_expired_key(self, key_id) -> None:
+	    try:
+	        await asyncio.to_thread(self.client.add_data_limit, key_id, 3 * 10**12)
+	        logging.info(f"Key {key_id} is now NOT expired")
+	    except Exception as e:
+	        logging.error(f"Error while starting key {key_id}: {e}")
+
