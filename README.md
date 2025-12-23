@@ -118,3 +118,19 @@ graph TD
     style O fill:#795548
     style P fill:#795548
 ```
+```mermaid
+erDiagram
+    key {
+        INTEGER id PK
+        STRING outline_id
+        STRING access_url
+        STRING user
+        DATE creation_date
+        DATE expiration_date
+    }
+
+    %% Индексы
+    key }o--|| idx_key : "INDEX access_url"
+    key }o--|| idx_user : "INDEX user"
+    key }o--|| idx_expiration : "INDEX expiration_date"
+```
