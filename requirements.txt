@@ -5,3 +5,4 @@ aiogram
 sqlalchemy
 asyncio
 asyncpg
+pytest
