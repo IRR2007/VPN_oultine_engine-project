@@ -118,15 +118,16 @@ graph TD
     style O fill:#795548
     style P fill:#795548
 ```
+## **Схема БД**
 ```mermaid
 erDiagram
     key {
         INTEGER id PK
-        STRING outline_id
-        STRING access_url
-        STRING user
-        DATE creation_date
-        DATE expiration_date
+        STRING outline_id NOT_NULL
+        STRING access_url NOT_NULL
+        STRING user NOT_NULL
+        DATE creation_date NOT_NULL
+        DATE expiration_date NOT_NULL
     }
 
     %% Индексы
