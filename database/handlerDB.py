@@ -30,7 +30,7 @@ class DataBaseHandler:
             raise
 
     async def add_key(self, key_str: str, user_name: str, expiration: date, key_id : str) -> None:
-        """Добавляет ключ ОБРАТИТЕ ВНИМАНИЕ ЧТО ТРЕБУЕТСЯ UTC!!!"""
+        """Добавляет ключ ОБРАТИТЕ ВНИМАНИЕ ЧТО ТРЕБУЕТСЯ UTC!!! ✅"""
         try:
             async with self.session_maker() as session:
                 new_key: Key = Key(access_url=key_str, user=user_name, expiration_date=expiration, outline_id=str(key_id))
@@ -125,6 +125,7 @@ class DataBaseHandler:
             raise
 
     async def get_all_invalid_keys_id(self) -> Optional[List[str]]:
+        """ Дает outline-id всех просроченных ключей ✅"""
         try:
             result = []
             all_keys = await self.get_all_keys()
@@ -136,6 +137,7 @@ class DataBaseHandler:
             logging.info(f"Failed to get all invalid keys from database")
 
     async def get_key_id(self, key_str: str) -> Optional[int]:
+        """ Дает outline-id ключа ✅"""
         try:
             async with self.session_maker() as session:
                 query = select(Key.outline_id).where(Key.access_url == key_str)
