@@ -6,3 +6,4 @@ sqlalchemy
 asyncio
 asyncpg
 pytest
+pytest-asyncio
