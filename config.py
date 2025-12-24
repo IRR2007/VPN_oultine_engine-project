@@ -2,7 +2,6 @@ from outline_vpn.outline_vpn import OutlineVPN
 from decouple import config
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 import logging
-import os
 from dotenv import load_dotenv
 from database.handlerDB import DataBaseHandler
 #for tg-bot

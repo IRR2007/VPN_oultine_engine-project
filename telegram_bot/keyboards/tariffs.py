@@ -3,9 +3,9 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 def tariffs_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="7 дней - 99 ₽", callback_data="tariff_7")],
-            [InlineKeyboardButton(text="14 дней - 179 ₽", callback_data="tariff_14")],
-            [InlineKeyboardButton(text="30 дней - 299 ₽", callback_data="tariff_30")],
+            [InlineKeyboardButton(text="7 дней - 67 ₽", callback_data="tariff_7")],
+            [InlineKeyboardButton(text="14 дней - 167 ₽", callback_data="tariff_14")],
+            [InlineKeyboardButton(text="30 дней - 267 ₽", callback_data="tariff_30")],
         ]
     )
 

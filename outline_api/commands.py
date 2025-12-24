@@ -27,7 +27,7 @@ class OutlineCommands():
       except Exception as e:
         logging.info(f"Error while deleting key {key.name}: {e}")
 
-  async def get_keys_info(self):
+  async def get_keys_info(self) -> List[Any] | None:
     try:
       keys = await asyncio.to_thread(self.client.get_keys)
       for key in keys:
