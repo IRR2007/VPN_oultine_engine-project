@@ -140,6 +140,6 @@ class DataBaseHandler:
             async with self.session_maker() as session:
                 query = select(Key.outline_id).where(Key.access_url == key_str)
                 result = await session.execute(query)
-                return result
+                return result.scalar()
         except Exception:
             logging.info(f"Failed to get outline id of key from database")

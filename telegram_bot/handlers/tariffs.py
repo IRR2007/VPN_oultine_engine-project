@@ -10,7 +10,7 @@ from datetime import date, timedelta
 router = Router()
 outline = OutlineCommands(client)
 
-PRICES = {7: 99, 14: 179, 30: 299}
+PRICES = {7: 67, 14: 167, 30: 267}
 
 
 @router.message(F.text == "💰 Тарифы")

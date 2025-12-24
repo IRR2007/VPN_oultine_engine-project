@@ -7,3 +7,4 @@ asyncio
 asyncpg
 pytest
 pytest-asyncio
+pytest-mock
