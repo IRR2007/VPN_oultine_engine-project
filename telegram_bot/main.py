@@ -10,6 +10,7 @@ from telegram_bot.handlers.tariffs import router as tariffs_router
 from telegram_bot.handlers.profile import router as profile_router
 from telegram_bot.handlers.support import router as support_router
 from telegram_bot.services.tasks import stop_expired_keys_task
+from telegram_bot.services.notifications import notify_expiring_subscriptions
 
 from config import BOT_TOKEN
 
@@ -28,6 +29,7 @@ async def main():
     await db.create_db()
 
     asyncio.create_task(stop_expired_keys_task())
+    asyncio.create_task(notify_expiring_subscriptions(bot))
 
     await dp.start_polling(bot)
 
