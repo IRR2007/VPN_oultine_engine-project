@@ -9,6 +9,7 @@ from telegram_bot.handlers.start import router as start_router
 from telegram_bot.handlers.tariffs import router as tariffs_router
 from telegram_bot.handlers.profile import router as profile_router
 from telegram_bot.handlers.support import router as support_router
+from telegram_bot.services.tasks import stop_expired_keys_task
 
 from config import BOT_TOKEN
 
@@ -25,6 +26,9 @@ dp.include_router(support_router)
 
 async def main():
     await db.create_db()
+
+    asyncio.create_task(stop_expired_keys_task())
+
     await dp.start_polling(bot)
 
 

@@ -5,7 +5,7 @@ from outline_api.commands import OutlineCommands
 
 from config import db
 
-from datetime import datetime, timedelta, timezone
+from datetime import date, timedelta
 
 router = Router()
 outline = OutlineCommands(client)
@@ -85,7 +85,7 @@ async def successful_payment_handler(message: types.Message):
     user_id = message.from_user.id
     username = message.from_user.username or f"user_{user_id}"
 
-    now = datetime.now(timezone.utc)
+    today = date.today()
 
     user_keys = await db.get_all_user_keys(str(user_id))
 
@@ -93,20 +93,21 @@ async def successful_payment_handler(message: types.Message):
         access_url = user_keys[0]
         old_expiration = await db.get_key_expiration_date(access_url)
 
-        if old_expiration and old_expiration.tzinfo is None:
-            old_expiration = old_expiration.replace(tzinfo=timezone.utc)
-
-        if old_expiration and old_expiration > now:
+        if old_expiration and old_expiration >= today:
             new_expiration = old_expiration + timedelta(days=days)
         else:
-            new_expiration = now + timedelta(days=days)
+            new_expiration = today + timedelta(days=days)
 
         await db.update_key_expiration_date(access_url, new_expiration)
+
+        key_id = await db.get_key_id(access_url)
+        if key_id:
+            await outline.start_expired_key(key_id)
 
         await message.answer(
             "🔄 *Подписка успешно продлена!*\n\n"
             f"📦 Продление: {days} дней\n"
-            f"📅 Новый срок: {new_expiration.strftime('%d.%m.%Y %H:%M')}\n\n"
+            f"📅 Новый срок: {new_expiration.strftime('%d.%m.%Y')}\n\n"
             "🔑 VPN-ключ остаётся прежним.",
             parse_mode="Markdown"
         )
@@ -121,7 +122,7 @@ async def successful_payment_handler(message: types.Message):
             )
             return
 
-        expiration = now + timedelta(days=days)
+        expiration = today + timedelta(days=days)
 
         await db.add_key(
             key_str=key.access_url,
@@ -130,10 +131,12 @@ async def successful_payment_handler(message: types.Message):
             key_id=key.key_id
         )
 
+        await outline.start_expired_key(key.key_id)
+
         await message.answer(
             "✅ *Оплата прошла успешно!*\n\n"
             f"📦 Тариф: {days} дней\n"
-            f"📅 Действует до: {expiration.strftime('%d.%m.%Y %H:%M')}\n\n"
+            f"📅 Действует до: {expiration.strftime('%d.%m.%Y')}\n\n"
             f"🔑 *Ваш VPN-ключ:*\n`{key.access_url}`",
             parse_mode="Markdown"
         )

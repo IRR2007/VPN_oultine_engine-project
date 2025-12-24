@@ -1,5 +1,5 @@
 from aiogram import Router, F, types
-from datetime import datetime, timezone
+from datetime import date
 
 from config import db
 from telegram_bot.keyboards.profile import profile_keyboard
@@ -10,7 +10,7 @@ router = Router()
 @router.message(F.text == "👤 Мой профиль")
 async def profile_handler(message: types.Message):
     user_id = message.from_user.id
-    now = datetime.now(timezone.utc)
+    today = date.today()
 
     # Получаем все ключи пользователя (у нас предполагается 1 ключ)
     user_keys = await db.get_all_user_keys(str(user_id))
@@ -28,15 +28,12 @@ async def profile_handler(message: types.Message):
     access_url = user_keys[0]
     expiration = await db.get_key_expiration_date(access_url)
 
-    if expiration and expiration.tzinfo is None:
-        expiration = expiration.replace(tzinfo=timezone.utc)
-
-    if not expiration or expiration < now:
+    if not expiration or expiration < today:
         status_text = "❌ неактивна"
         expires_text = "—"
     else:
         status_text = "✅ активна"
-        expires_text = expiration.strftime("%d.%m.%Y %H:%M")
+        expires_text = expiration.strftime("%d.%m.%Y")
 
     await message.answer(
         "👤 *Мой профиль*\n\n"
